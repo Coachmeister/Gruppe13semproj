@@ -12,6 +12,7 @@ sdfsdfdsfsdf
  * A method call runs the game.
  * 
  * @author Rasmus Willer
+ * christian
  */
 public class Game {
     // Declare variables
