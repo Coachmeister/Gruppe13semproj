@@ -2,6 +2,10 @@ package group13;
 
 import java.util.ArrayList;
 
+/*
+FRederiks Brance!
+*/
+
 /**
  * Instantiation of Game class generate rooms and creates an input parser.
  * A method call runs the game.
