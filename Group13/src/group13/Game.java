@@ -73,8 +73,6 @@ public class Game {
         monky.setExit("left", banana);
         monky.setExit("right", flood);
         
-        noMonky.setExit("left", banana);
-        noMonky.setExit("right", flood);
       
         flood.setExit("left", monky);
         
@@ -121,12 +119,11 @@ public class Game {
         System.out.println();
         
         // Welcome message
-        System.out.println("Welcome to the World of Zuul!");
-        System.out.println("World of Zuul is a new, incredibly boring " +
-                "adventure game.");
-        
+         System.out.println(ANSI_GREEN + "Welcome to the World of Zuul!" + ANSI_RESET);
+        System.out.println(ANSI_GREEN + "World of Zuul is a new, incredibly boring " +
+                "adventure game." + ANSI_RESET);
         // Help message
-        System.out.println("Type '" + CommandWord.HELP + "' if you need help.");
+        System.out.println(ANSI_RED + "Type '" + CommandWord.HELP + "' if you need help." + ANSI_RESET);
         System.out.println();
         
         // Current room message
