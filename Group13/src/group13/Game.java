@@ -349,9 +349,7 @@ public class Game {
         Character getCharacter = currentRoom.getCharacter(command.getSecondWord());
 
         if(getCharacter == null){
-
-          System.out.print("This character is not here?");
-
+            System.out.println("This charater is not here?");
         }else{
             if(getCharacter.getNeeds().equals(command.getThirdWord())){
                 if(getItemInInventory(command.getThirdWord())){
