@@ -356,6 +356,7 @@ public class Game {
             if(getCharacter.getNeeds().equals(command.getThirdWord())){
                 if(getItemInInventory(command.getThirdWord())){
                     getCharacter.setMood(1);
+                    currentRoom.removeItem(command.getThirdWord());
                     System.out.println("You have now given " + command.getSecondWord() + " an " + command.getThirdWord() + ".");
                 }else{
                     System.out.println("You don't have this item.");
