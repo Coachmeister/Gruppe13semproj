@@ -2,17 +2,11 @@ package group13;
 
 import java.util.ArrayList;
 
-/*
-FRederiks Brance! Jonas Kommentar!
-sdfsdfdsfsdf
-*/
-
 /**
  * Instantiation of Game class generate rooms and creates an input parser.
  * A method call runs the game.
  * 
  * @author Rasmus Willer
- * christian
  */
 public class Game {
     // Declare variables
@@ -304,20 +298,20 @@ public class Game {
         }
         */
         
-        System.out.println(ANSI_RED + "T" + ANSI_RESET);
+        //System.out.println(ANSI_RED + "T" + ANSI_RESET);
         
         // If no room, write error message
         if (nextRoom == null) {
-            System.out.println("There is no door!");
+            System.out.println("\nThere is no door!\n");
         // Set next room to current and print room description
         }else if(currentRoom.isBlocked(direction)){
-            System.out.print("This path is blocked.");
+            System.out.println("\nThis path is blocked.\n");
         }else {
             currentRoom = nextRoom;
             if(direction.equals("right")){
-                System.out.println(currentRoom.getLongDescription());
+                System.out.println("\n" + currentRoom.getLongDescription());
             }else if(direction.equals("left")){
-                System.out.println(currentRoom.getLongDescriptionLeft());
+                System.out.println("\n" + currentRoom.getLongDescriptionLeft());
             }
         }
     }
@@ -355,11 +349,14 @@ public class Game {
         Character getCharacter = currentRoom.getCharacter(command.getSecondWord());
 
         if(getCharacter == null){
-            System.out.print("This character is not here?");
+
+          System.out.print("This character is not here?");
+
         }else{
             if(getCharacter.getNeeds().equals(command.getThirdWord())){
                 if(getItemInInventory(command.getThirdWord())){
                     getCharacter.setMood(1);
+                    System.out.println("You have now given " + command.getSecondWord() + " an " + command.getThirdWord() + ".");
                 }else{
                     System.out.println("You don't have this item.");
                 }
@@ -409,7 +406,7 @@ public class Game {
         } else {
             inventory.add(newItem);
             currentRoom.removeItem(item);
-            System.out.print("Picked up: " + item);
+            System.out.println("Picked up: " + item);
         }
     }
 }
