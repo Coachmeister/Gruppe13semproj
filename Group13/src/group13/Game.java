@@ -119,11 +119,12 @@ public class Game {
         System.out.println();
         
         // Welcome message
-         System.out.println(ANSI_GREEN + "Welcome to the World of Zuul!" + ANSI_RESET);
-        System.out.println(ANSI_GREEN + "World of Zuul is a new, incredibly boring " +
-                "adventure game." + ANSI_RESET);
+        System.out.println("Welcome to the World of Zuul!");
+        System.out.println("World of Zuul is a new, incredibly boring " +
+                "adventure game.");
+        
         // Help message
-        System.out.println(ANSI_RED + "Type '" + CommandWord.HELP + "' if you need help." + ANSI_RESET);
+        System.out.println("Type '" + CommandWord.HELP + "' if you need help.");
         System.out.println();
         
         // Current room message
@@ -215,20 +216,20 @@ public class Game {
         }
         */
         
-        System.out.println(ANSI_RED + "T" + ANSI_RESET);
+        //System.out.println(ANSI_RED + "T" + ANSI_RESET);
         
         // If no room, write error message
         if (nextRoom == null) {
-            System.out.println("There is no door!");
+            System.out.println("\nThere is no door!\n");
         // Set next room to current and print room description
         }else if(currentRoom.isBlocked(direction)){
-            System.out.print("This path is blocked.");
+            System.out.println("\nThis path is blocked.\n");
         }else {
             currentRoom = nextRoom;
             if(direction.equals("right")){
-                System.out.println(currentRoom.getLongDescription());
+                System.out.println("\n" + currentRoom.getLongDescription());
             }else if(direction.equals("left")){
-                System.out.println(currentRoom.getLongDescriptionLeft());
+                System.out.println("\n" + currentRoom.getLongDescriptionLeft());
             }
         }
     }
@@ -266,11 +267,12 @@ public class Game {
         Character getCharacter = currentRoom.getCharacter(command.getSecondWord());
 
         if(getCharacter == null){
-            System.out.print("This charater is not here?");
+            System.out.println("This charater is not here?");
         }else{
             if(getCharacter.getNeeds().equals(command.getThirdWord())){
                 if(getItemInInventory(command.getThirdWord())){
                     getCharacter.setMood(1);
+                    System.out.println("You have now given " + command.getSecondWord() + " an " + command.getThirdWord() + ".");
                 }else{
                     System.out.println("You don't have this item.");
                 }
@@ -320,7 +322,7 @@ public class Game {
         } else {
             inventory.add(newItem);
             currentRoom.removeItem(item);
-            System.out.print("Picked up: " + item);
+            System.out.println("Picked up: " + item);
         }
     }
 }

@@ -75,7 +75,11 @@ public class Room {
     public String getRoomName(){
         return this.roomName;
     }
-
+    
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    
     /**
      * Return short description of the room.
      * 
@@ -105,16 +109,23 @@ public class Room {
      */
     public String getExitString() {
         // Start the String with title
-        String returnString = "Exits:";
+        String returnString = "";
+        if(getRoomItems() != null){            
+            returnString += "\nItems in room:\n";
+            returnString += getRoomItems() + " ";
+            returnString += "\n";
+        }
+        if(getRoomCharacters() != null){
+            returnString += "\nCharacters in the room:\n";
+            returnString += getRoomCharacters() + "\n";
+        }
+        
+        returnString += "\nExits:";
         // add each exit to the String, separated by space
         Set<String> keys = exits.keySet();
         for(String exit : keys) {
             returnString += " " + exit;
         }
-        returnString += "\nItems in room:";
-        returnString += getRoomItems() + "\n";
-        returnString += "\nCharacters in the room:";
-        returnString += getRoomCharacters() + "\n";
         // Return String listing exits
         return returnString;
     }
@@ -162,6 +173,9 @@ public class Room {
         for (int i = 0; i < characters.size(); i++) {
             output += characters.get(i).getName() + ": " + characters.get(i).getDescription();
         }
+        if(output.isEmpty()){
+            return null;
+        }
         return output;
     }
     
@@ -169,6 +183,9 @@ public class Room {
         String output = "";
         for (int i = 0; i < items.size(); i++) {
             output += items.get(i).getDescription() + " ";
+        }
+        if(output.isEmpty()){
+            return null;
         }
         return output;
     }
