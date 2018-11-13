@@ -41,15 +41,98 @@ public class Game {
      */
     private void createRooms() {
         // Declare variables
-        Room start, stairs, banana, monky, noMonky, flood;
+        Room start, stairs, banana, monky, noMonky, flood, darkroom;
         
         // Instantiate rooms with description
-        start = new Room("start", "Første rum", "Du har været her før?");
-        stairs = new Room("stairs", "Trapper!", "Trapper!");
-        banana = new Room("banana", "Hey en banan!", "Hey en banan!");
-        monky = new Room("monky", "Goddag abe", "Goddag abe!");
-        noMonky = new Room("noMonky", "INGEN abe", "INGEN abe!");
-        flood = new Room("flood", "Du hænger i over en flod!", "Du hænger i over en flod!");
+        start = new Room("start", "\nYou fall down into a jungle. There is a mountainside to your left and a path to your right.\n\nXXXXXXXXXXXXXXXXXXXXXXXXXX\n" +
+"X888888                  X\n" +
+"X8888„       ☻           X\n" +
+"X8888╝     /()\\     ->   X\n" +
+"X888        /\\           X\n" +
+"XXXXXXXXXXXXXXXXXXXXXXXXXX\n", "\nYou still can't climb up the mountainside. You can only go back where you came from.\n\nXXXXXXXXXXXXXXXXXXXXXXXXXX\n" +
+"X888888                  X\n" +
+"X8888„       ☻           X\n" +
+"X8888╝     /()\\     ->   X\n" +
+"X888        /\\           X\n" +
+"XXXXXXXXXXXXXXXXXXXXXXXXXX\n");
+        
+        stairs = new Room("stairs", "\nYou can walk up the stairs to your right, or go back where you came from.\n\nXXXXXXXXXXXXXXXXXXXXXXXXXX\n" +
+"X                     -> X\n" +
+"X          ☻          [ØØX\n" +
+"X <-     /()\\        [ØØØX\n" +
+"X         /\\        [ØØØØX\n" +
+"XXXXXXXXXXXXXXXXXXXXXXXXXX\n", 
+                "\nYou can go back up the stairs or continue back to the mountainside.\n\nXXXXXXXXXXXXXXXXXXXXXXXXXX\n" +
+"X                     -> X\n" +
+"X          ☻          [ØØX\n" +
+"X <-     /()\\        [ØØØX\n" +
+"X         /\\        [ØØØØX\n" +
+"XXXXXXXXXXXXXXXXXXXXXXXXXX\n");
+        
+        banana = new Room("banana", "\nYou can either go back down the stairs, or continue further. You see a banana tree, you can pick up a banana if you'd like.\n\nXXXXXXXXXXXXXXXXXXXXXXXXXX\n" +
+"X        ☻   (_~~_)      X\n" +
+"X      /()\\    ▓▓    ->  X\n" +
+"X <-    /\\     ▓▓        X\n" +
+"X [ØØØØØØØØØØØØØØØØØØØØØØX\n" +
+"X[ØØØØØØØØØØØØØØØØØØØØØØØX\n", 
+                "\nYou still see the banana tree pick a banana if you'd like. You can go back to the stream where you came from, or continue down the stairs.\n\nXXXXXXXXXXXXXXXXXXXXXXXXXX\n" +
+"X         ☻  (_~~_)      X\n" +
+"X       /()\\   ▓▓    ->  X\n" +
+"X <-     /\\    ▓▓        X\n" +
+"X [ØØØØØØØØØØØØØØØØØØØØØØX\n" +
+"X[ØØØØØØØØØØØØØØØØØØØØØØØX\n");
+        
+        monky = new Room("monky", "\nYou see an angry monkey hanging from jungle vines above a stream of water, blocking your path.\nIf you give him a banana he might go away. Either go back or attempt to cross the stream.\n\nXXXXXXXXXXXXXXXXXXXXXXXXXX\n" +
+"X             l\\^^!      X\n" +
+"X      ☻      l_()       X\n" +
+"X <- /()\\     l       -> X\n" +
+"X     /\\                 X\n" +
+"XØØØØØØØØØØ_______ØØØØØØØX\n", 
+                "\nYou can continue on the path back to the banana tree, or swing back across the stream.\n\nXXXXXXXXXXXXXXXXXXXXXXXXXX\n" +
+"X             l          X\n" +
+"X      ☻      l          X\n" +
+"X <- /()\\     l      ->  X\n" +
+"X     /\\                 X\n" +
+"XØØØØØØØØØØ_______ØØØØØØØX\n");
+        
+        noMonky = new Room("noMonky", "\nYou no longer see the angry monkey.\nYou can continue on the path back to the banana tree, or swing back across the stream.\n\nXXXXXXXXXXXXXXXXXXXXXXXXXX\n" +
+"X             l          X\n" +
+"X      ☻      l          X\n" +
+"X <- /()\\     l      ->  X\n" +
+"X     /\\                 X\n" +
+"XØØØØØØØØØØ_______ØØØØØØØX\n","\nYou no longer see the angry monkey.\nYou can either swing across the stream, or go back to the banana tree stream.\n\nXXXXXXXXXXXXXXXXXXXXXXXXXX\n" +
+"X             l          X\n" +
+"X      ☻      l          X\n" +
+"X <- /()\\     l      ->  X\n" +
+"X     /\\                 X\n" +
+"XØØØØØØØØØØ_______ØØØØØØØX\n");
+        
+        flood = new Room("flood", "\nYou see the jungle vine hanging above the stream behind you, and a dark tunnel ahead of you.\nSwing back using the jungle vine, or go in to the dark tunnel.\n\nXXXXXXXXXXXXXXXXXXXXXXXXXX\n" +
+"X l                888888X\n" +
+"X l           ☻          X\n" +
+"X l  <-     /()\\      -> X\n" +
+"X            /\\          X\n" +
+"X______ØØØØØØØØØØØØ888888X\n", 
+                "\nYou see the jungle vine hanging above the stream ahead, and a dark tunnel behind you.\n\nXXXXXXXXXXXXXXXXXXXXXXXXXX\n" +
+"X l                888888X\n" +
+"X l           ☻          X\n" +
+"X l  <-     /()\\      -> X\n" +
+"X            /\\          X\n" +
+"X______ØØØØØØØØØØØØ888888X\n");
+        
+        darkroom = new Room ("darkroom",
+                "\nYou see nothing. You can go back where you came from.\n\nXXXXXXXXXXXXXXXXXXXXXXXXXX\n" +
+"X888888888888888888888888X\n" +
+"X     ☻  8888888888888888X\n" +
+"X<- /()\\ 8888888888888888X\n" +
+"X    /\\  8888888888888888X\n" +
+"X888888888888888888888888X\n",
+                "\nYou see nothing. You can go back where you came from.\n\nXXXXXXXXXXXXXXXXXXXXXXXXXX\n" +
+"X888888888888888888888888X\n" +
+"X     ☻  8888888888888888X\n" +
+"X<- /()\\ 8888888888888888X\n" +
+"X    /\\  8888888888888888X\n" +
+"X888888888888888888888888X\n");
         /*
         office = new Room("in the computing admin office");
         outside = new Room("outside the main entrance of the university");
@@ -71,6 +154,9 @@ public class Game {
         noMonky.setExit("right", flood);
       
         flood.setExit("left", monky);
+        flood.setExit("right", darkroom);
+        
+        darkroom.setExit("left", flood);
         
         
         banana.setItem(new Item("Banana"));
@@ -263,7 +349,9 @@ public class Game {
         Character getCharacter = currentRoom.getCharacter(command.getSecondWord());
 
         if(getCharacter == null){
-            System.out.println("This charater is not here?");
+
+          System.out.print("This character is not here?");
+
         }else{
             if(getCharacter.getNeeds().equals(command.getThirdWord())){
                 if(getItemInInventory(command.getThirdWord())){
@@ -273,12 +361,12 @@ public class Game {
                     System.out.println("You don't have this item.");
                 }
             }else{
-                System.out.println("You can't use this item on this charater.");
+                System.out.println("You can't use this item on this character.");
             }
         }
         
     }
-
+              
     private void getInventory() {
         String output = "";
         for (int i = 0; i < inventory.size(); i++) {
