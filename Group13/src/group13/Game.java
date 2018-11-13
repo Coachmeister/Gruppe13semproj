@@ -141,7 +141,7 @@ public class Game {
         // Set exits to other rooms
         start.setExit("right", stairs);
         
-        stairs.setExit("left", banana);
+        stairs.setExit("left", start);
         stairs.setExit("right", banana);
         
         banana.setExit("left", stairs);
