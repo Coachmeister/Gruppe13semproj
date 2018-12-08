@@ -43,6 +43,8 @@ public class level {
     public HashMap<KeyCode, Boolean> keys = new HashMap<KeyCode, Boolean>();
     
     public ArrayList<Node> platforms = new ArrayList<Node>();
+    public ArrayList<Item> items = new ArrayList<Item>();
+    public ArrayList<Exit> exits = new ArrayList<Exit>();
     
     public Pane appRoot = new Pane();
     public Pane gameRoot = new Pane();
@@ -59,13 +61,32 @@ public class level {
     public int playerXPosition;
     public int playerYPosition;
     
-    public void test(Scene scene){
+    public int playerStartXPosition = 0;
+    public int playerStartYPosition = 0;
+    
+    public Label coins;
+    public Label lifes;
+    
+    level(String levelFile){
+        this.levelFile = levelFile;
+    }
+    
+    public void init(Scene scene){
         scene.setOnKeyPressed(event -> keys.put(event.getCode(), true));
         scene.setOnKeyReleased(event -> keys.put(event.getCode(), false));
     }
     
-    level(String levelFile){
-        this.levelFile = levelFile;
+    public void setPlayerPosition(int x, int y){
+        this.playerStartXPosition = x;
+        this.playerStartYPosition = y;
+    }
+    
+    public void addCoinToText(int coins){
+        this.coins.setText("Coins collected: "+coins+" / 27");
+    }
+    
+    public void setLifes(int lifes){
+        this.lifes.setText("Lifes: "+lifes+" / 10");
     }
     
     public Pane scene(){
@@ -105,35 +126,7 @@ public class level {
                     }
                 }
             }
-            /*
-            while ((line = br.readLine()) != null) {
-
-                // use comma as separator
-                String[] country = line.split(cvsSplitBy);
-                for(int j = 0; j < country.length; j++){
-                switch(country[j]){
-                    case "-1":
-                        break;
-                    case "0":
-                        Node platform = createEntity(j*60, j*60, 60, 60, Color.BROWN);
-                        platforms.add(platform);
-                        break;
-                }
-            }
-
-            }
-            */
             
-            /*
-            while ((line = br.readLine()) != null) {
-
-                // use comma as separator
-                String[] country = line.split(cvsSplitBy);
-
-                System.out.println("Country [code= " + country[4] + " , name=" + country[5] + "]");
-
-            }
-            */
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -150,27 +143,17 @@ public class level {
         
         
         Rectangle bg = new Rectangle(1280, 720);
-        /*
-        levelWidth = level1.LEVEL1[0].length() * 60;
-        try {
-        for(int i = 0; i < level1.LEVEL1.length; i++){
-            String lined = level1.LEVEL1[i];
-            for(int j = 0; j < lined.length(); j++){
-                switch(lined.charAt(j)){
-                    case '0':
-                        break;
-                    case '1':
-                        Node platform = createEntity(j*60, i*60, 60, 60, Color.BROWN);
-                        platforms.add(platform);
-                        break;
-                }
-            }
-        }
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        */
-        player = createEntity(0, 100, 40, 40, Color.BLUE);
+        
+        player = createEntity(playerStartXPosition, playerStartYPosition, 40, 40, Color.BLUE);
+        
+        coins = new Label("Coins collected: 0 / 27");
+        coins.setTranslateY(10);
+        coins.setTextFill(Color.YELLOW);
+        
+        lifes = new Label("Lifes: 10 / 10");
+        lifes.setTranslateX(150);
+        lifes.setTranslateY(10);
+        lifes.setTextFill(Color.RED);
         
         Label LabelXPosition = new Label("X: 0");
         LabelXPosition.setTranslateY(50);
@@ -200,33 +183,46 @@ public class level {
            LabelYPosition.setText("Y: "+offset);
         });
         
-        appRoot.getChildren().addAll(bg, gameRoot, uiRoot, LabelXPosition, LabelYPosition);
+        appRoot.getChildren().addAll(bg, gameRoot, uiRoot, coins, lifes, LabelXPosition, LabelYPosition);
         
         return appRoot;
         
     }
     
-    public void update(){
-        
-        if(isPressed(KeyCode.W) && player.getTranslateY() >= 5){
-            jumpPlayer();
+    public void addItem(Item name){
+        items.add(name);
+        name.drawEntity(gameRoot);
+    }
+    
+    public void removeItem(Item name){
+        items.add(name);
+    }
+    
+    public boolean getItem(int x, int y){
+        for(int i = 0; i < items.size(); i++){
+            System.out.println(items.get(i).getName());
         }
-        
-        if(isPressed(KeyCode.A) && player.getTranslateX() >= 5){
-            movePlayerX(-5);
+        return false;
+    }
+    
+    public void getItems(){
+        for(int i = 0; i < items.size(); i++){
+            System.out.println(items.get(i).getName());
         }
+    }
+    
+    public void setExit(Exit exit){
+  
+        exits.add(exit);
         
-        if(isPressed(KeyCode.D) && player.getTranslateX() + 40 <= levelWidth - 5){
-            movePlayerX(5);
-        }
+        Rectangle entity = new Rectangle(60,80);
+        entity.setTranslateX(exit.x);
+        entity.setTranslateY(exit.y);
+        entity.setArcHeight(40);
+        entity.setFill(Color.WHITE);
+        entity.toBack();
         
-        if(playerVelocity.getY() < 10){
-            playerVelocity = playerVelocity.add(0, 1);
-        }
-        
-        movePlayerY((int)playerVelocity.getY());
-        
-        
+        gameRoot.getChildren().add(entity);
         
     }
     
@@ -286,6 +282,20 @@ public class level {
         entity.setTranslateX(x);
         entity.setTranslateY(y);
         entity.setFill(color);
+        entity.toFront();
+        
+        gameRoot.getChildren().add(entity);
+        return entity;
+        
+    }
+    
+    public Node createCoin(int x, int y){
+        Rectangle entity = new Rectangle(20,20);
+        entity.setTranslateX(x);
+        entity.setTranslateY(y);
+        entity.setArcHeight(40);
+        entity.setArcWidth(40);
+        entity.setFill(Color.YELLOW);
         
         gameRoot.getChildren().add(entity);
         return entity;
@@ -302,6 +312,5 @@ public class level {
     public boolean isPressed(KeyCode key){
         return keys.getOrDefault(key, false);
     }
-    
     
 }

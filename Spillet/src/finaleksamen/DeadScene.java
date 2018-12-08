@@ -16,20 +16,19 @@ import javafx.stage.Stage;
  *
  * @author frederikhelth
  */
-public class HelpScene {
+public class DeadScene {
     
     public Pane scene(Stage primaryStage, Scene GoBackScene){
         
-        Label label1= new Label("Help info here");
-        Label label2= new Label("Help info here");
+        Label label1= new Label("You are dead.");
         
-        Button button1= new Button("Back");
+        Button button1= new Button("Quit");
         
-        button1.setOnAction(e -> primaryStage.setScene(GoBackScene));   
+        button1.setOnAction(e -> primaryStage.close());   
         
         VBox layout_help = new VBox(20);     
         
-        layout_help.getChildren().addAll(label1, button1, label2);
+        layout_help.getChildren().addAll(label1, button1);
         
         return layout_help;
         

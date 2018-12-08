@@ -9,6 +9,7 @@ package finaleksamen;
  *
  * @author frederikhelth
  */
+import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,6 +29,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
@@ -40,11 +43,14 @@ import jdk.nashorn.internal.parser.JSONParser;
  */
 public class Finaleksamen extends Application {
 
-    Scene start, help, level1, level2;
+    Scene start, help, dead, level1, level2;
     
     public level currentScene;
-    
+    public ArrayList<Inventory> inventory = new ArrayList<Inventory>();
     public Stage location;
+    public boolean enter = false;
+    public MediaPlayer coinSound;
+    public int lifes = 10;
     
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -52,7 +58,12 @@ public class Finaleksamen extends Application {
         location = primaryStage;
         
         location.setTitle("My First JavaFX GUI");
+        
+        String musicFile = "Resources/sounds/coin.wav";     // For example
 
+        Media sound = new Media(new File(musicFile).toURI().toString());
+        this.coinSound = new MediaPlayer(sound);
+        
         //Scene 1
         Label label1= new Label("Welcome back");
         
@@ -73,32 +84,33 @@ public class Finaleksamen extends Application {
         help = new Scene(helpScene.scene(location, start), 300, 250);
 
         level _level1 = new level("level3");
+        _level1.setPlayerPosition(0, 0);
+        _level1.addItem(new Item("Test", 300, 500));
+        _level1.addItem(new Item("Test", 350, 500));
+        
         level _level2 = new level("level3");
-
+        _level2.setPlayerPosition(0, 0);
+        _level2.addItem(new Item("Test", 450, 500));
+        
         level1 = new Scene(_level1.scene());
         level2 = new Scene(_level2.scene());
-
-        _level1.test(level1);
-        _level2.test(level2);
-
-        setExit(level2, _level1, _level2, 1700, 500);
+        
+        _level1.init(level1);
+        _level1.setExit(new Exit(_level2, level2, 100, 550));
+        
+        _level2.init(level2);
+        _level2.setExit(new Exit(_level1, level1, 200, 550));
+        
         
         location.setScene(start);
         location.show();
-        
-        location.setOnShown(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent event) {
-                System.out.print("Hejsa");
-            }
-        });
         
         currentScene = _level1;
         
         AnimationTimer timer = new AnimationTimer(){
             @Override
             public void handle(long now){
-                currentScene.update();
+                update();
             }
         };
         
@@ -106,49 +118,98 @@ public class Finaleksamen extends Application {
         
     }
     
-    public void setExit(Scene scene, level from, level to, int x, int y){
+    public void update(){
         
-        Label label = new Label("Tryk 'E' for enter");
-        label.setTextFill(Color.WHITE);
-        label.setVisible(true);
-        label.toFront();
+        if(currentScene.isPressed(KeyCode.W) && currentScene.player.getTranslateY() >= 5){
+            currentScene.jumpPlayer();
+        }
+        
+        if(currentScene.isPressed(KeyCode.A) && currentScene.player.getTranslateX() >= 5){
+            currentScene.movePlayerX(-5);
+        }
+        
+        if(currentScene.isPressed(KeyCode.D) && currentScene.player.getTranslateX() + 40 <= currentScene.levelWidth - 5){
+            currentScene.movePlayerX(5);
+        }
+        
+        if(currentScene.isPressed(KeyCode.E)){
+            enter = true;
+        }
+        
+        if(currentScene.isPressed(KeyCode.E) == false && enter == true){
+            enter = false;
+            goRoom();
+        }
+        
+        if(currentScene.playerVelocity.getY() < 10){
+            currentScene.playerVelocity = currentScene.playerVelocity.add(0, 1);
+        }
+        
+        checkCoinCollision();
+        checkFall();
+        
+        currentScene.movePlayerY((int)currentScene.playerVelocity.getY());
+        
+        
+        
+    }
+    
+    public void goRoom(){
+        for(int i = 0; i < currentScene.exits.size(); i++){
+                
+            int x = currentScene.exits.get(i).getX();
+            int y = currentScene.exits.get(i).getY();
 
-        from.appRoot.getChildren().add(label);
-        
-        AnimationTimer timer = new AnimationTimer(){
-            @Override
-            public void handle(long now){
+            if(currentScene.playerXPosition >= x && currentScene.playerXPosition <= x + 60){
+                location.setScene(currentScene.exits.get(i).getScene());
+                currentScene = currentScene.exits.get(i).getLevel();
+                currentScene.addCoinToText(inventory.size());
+                currentScene.setLifes(this.lifes);
+            }
+
+        }
+    }
+    
+    public void checkCoinCollision(){
+        for(int i = 0; i < currentScene.items.size(); i++){
                 
-                if(currentScene.playerXPosition >= x && currentScene.playerXPosition <= x + 50){
-                    
-                    label.setTranslateY(currentScene.playerYPosition-30);
-                    label.setTranslateX(x-550);
-                    label.setVisible(true);
-                    
-                }else{        
-                    label.setVisible(false);
-                }
-                
-                if(currentScene.isPressed(KeyCode.E)){
-                    if(currentScene.playerXPosition >= x && currentScene.playerXPosition <= x + 50){
-                        location.setScene(scene);
-                        currentScene = to;
-                    }
+            int x = currentScene.items.get(i).getX();
+            int y = currentScene.items.get(i).getY();
+
+            if(currentScene.playerXPosition >= x-20 && currentScene.playerXPosition <= x + 20 &&
+                    currentScene.playerYPosition >= y-20 && currentScene.playerYPosition <= y + 20){
+                if(currentScene.items.get(i).getHit() == false){
+                    currentScene.items.get(i).setHit();
+                    this.coinSound.play();
+                    this.coinSound.setOnEndOfMedia(() -> this.coinSound.stop());
+                    inventory.add(new Inventory());
+                    System.out.print(inventory.size());
+                    currentScene.addCoinToText(inventory.size());
                 }
             }
-        };
-        timer.start();
-        /*
-        btn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                location.setScene(scene);
-                System.out.print("X: " + currentScene.playerXPosition + " Y " + currentScene.playerYPosition);
-                currentScene = to;
+
+        }
+    }
+    
+    public void checkFall(){
+        if(currentScene.playerYPosition > 1000){
+            currentScene.player.setTranslateX(0);
+            currentScene.player.setTranslateY(0);
+            this.lifes -= 1;
+            currentScene.setLifes(this.lifes);
+            if(this.lifes == 0){
+                                
+                DeadScene deadScene = new DeadScene();
+                dead = new Scene(deadScene.scene(location, start), 300, 250);
+                location.setScene(dead);
+                
             }
-        });
-        */
-        
+            System.out.println(this.lifes);
+        }
+    }
+    
+    public void addInventory(Inventory item){
+        inventory.add(item);
     }
     
     /**
