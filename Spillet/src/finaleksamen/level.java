@@ -76,6 +76,16 @@ public class level {
         scene.setOnKeyReleased(event -> keys.put(event.getCode(), false));
     }
     
+    public void addText(String text, int x, int y){
+        
+        Label label = new Label(text);
+        label.setTranslateX(x);
+        label.setTranslateY(y);
+        label.setTextFill(Color.WHITE);
+        
+        appRoot.getChildren().addAll(label);
+    }
+    
     public void setPlayerPosition(int x, int y){
         this.playerStartXPosition = x;
         this.playerStartYPosition = y;
@@ -222,6 +232,7 @@ public class level {
         entity.setFill(Color.WHITE);
         entity.toBack();
         
+        gameRoot.getChildren().add(exit.getLabel());
         gameRoot.getChildren().add(entity);
         
     }
