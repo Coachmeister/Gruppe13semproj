@@ -20,8 +20,9 @@ public class HelpScene {
     
     public Pane scene(Stage primaryStage, Scene GoBackScene){
         
-        Label label1= new Label("Help info here");
-        Label label2= new Label("Help info here");
+        Label label1= new Label("Welcome to the help menu! Here you can find information about the game.");
+        Label label2 = new Label("Player movement: WASD.");
+        Label label3 = new Label("Interaction with doors: E");
         
         Button button1= new Button("Back");
         
@@ -29,7 +30,7 @@ public class HelpScene {
         
         VBox layout_help = new VBox(20);     
         
-        layout_help.getChildren().addAll(label1, button1, label2);
+        layout_help.getChildren().addAll(label1, label2, label3, button1);
         
         return layout_help;
         
