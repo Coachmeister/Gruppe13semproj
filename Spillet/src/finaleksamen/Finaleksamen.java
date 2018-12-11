@@ -97,6 +97,7 @@ public class Finaleksamen extends Application {
         
         _level1.init(level1);
         _level1.setExit(new Exit(_level2, level2, 100, 550));
+        _level1.addText("hejsa med dig!", 100, 100);
         
         _level2.init(level2);
         _level2.setExit(new Exit(_level1, level1, 200, 550));
@@ -147,11 +148,26 @@ public class Finaleksamen extends Application {
         
         checkCoinCollision();
         checkFall();
+        checkRoomHover();
         
         currentScene.movePlayerY((int)currentScene.playerVelocity.getY());
         
-        
-        
+    }
+    
+    public void checkRoomHover(){
+        for(int i = 0; i < currentScene.exits.size(); i++){
+                
+            int x = currentScene.exits.get(i).getX();
+            int y = currentScene.exits.get(i).getY();
+
+            if(currentScene.playerXPosition >= x && currentScene.playerXPosition <= x + 60 && 
+                    currentScene.playerYPosition >= y-80 && currentScene.playerYPosition <= y + 80){
+                currentScene.exits.get(i).setLabelVisible(true);
+            }else{
+               currentScene.exits.get(i).setLabelVisible(false);
+            }
+
+        }
     }
     
     public void goRoom(){
@@ -160,7 +176,8 @@ public class Finaleksamen extends Application {
             int x = currentScene.exits.get(i).getX();
             int y = currentScene.exits.get(i).getY();
 
-            if(currentScene.playerXPosition >= x && currentScene.playerXPosition <= x + 60){
+            if(currentScene.playerXPosition >= x-60 && currentScene.playerXPosition <= x + 60 && 
+                    currentScene.playerYPosition >= y-80 && currentScene.playerYPosition <= y + 80){
                 location.setScene(currentScene.exits.get(i).getScene());
                 currentScene = currentScene.exits.get(i).getLevel();
                 currentScene.addCoinToText(inventory.size());
@@ -193,8 +210,8 @@ public class Finaleksamen extends Application {
     
     public void checkFall(){
         if(currentScene.playerYPosition > 1000){
-            currentScene.player.setTranslateX(0);
-            currentScene.player.setTranslateY(0);
+            currentScene.player.setTranslateX(currentScene.playerStartXPosition);
+            currentScene.player.setTranslateY(currentScene.playerStartXPosition);
             this.lifes -= 1;
             currentScene.setLifes(this.lifes);
             if(this.lifes == 0){
@@ -206,10 +223,6 @@ public class Finaleksamen extends Application {
             }
             System.out.println(this.lifes);
         }
-    }
-    
-    public void addInventory(Inventory item){
-        inventory.add(item);
     }
     
     /**

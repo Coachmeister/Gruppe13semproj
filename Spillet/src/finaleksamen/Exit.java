@@ -6,6 +6,8 @@
 package finaleksamen;
 
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.paint.Color;
 
 /**
  *
@@ -14,6 +16,7 @@ import javafx.scene.Scene;
 public class Exit {
     
     public level level;
+    public Label label;
     public Scene scene;
     public int x;
     public int y;
@@ -23,6 +26,21 @@ public class Exit {
         this.level = level;
         this.x = x;
         this.y = y;
+        
+        label = new Label("Tryk E for enter");
+        label.setTranslateX(x-20);
+        label.setTranslateY(y-40);
+        label.setTextFill(Color.WHITE);
+        label.setVisible(false);
+        
+    }
+    
+    public Label getLabel(){
+        return this.label;
+    }
+    
+    public void setLabelVisible(Boolean visible){
+        this.label.setVisible(visible);
     }
     
     public level getLevel(){
