@@ -33,6 +33,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Random;
 
 /**
  *
@@ -67,6 +68,8 @@ public class level {
     public Label coins;
     public Label lifes;
     
+    public Color[] entityColors = {Color.ORANGE, Color.BROWN, Color.RED, Color.PURPLE, Color.GOLD};
+    
     level(String levelFile){
         this.levelFile = levelFile;
     }
@@ -83,7 +86,7 @@ public class level {
         label.setTranslateY(y);
         label.setTextFill(Color.WHITE);
         
-        appRoot.getChildren().addAll(label);
+        gameRoot.getChildren().addAll(label);
     }
     
     public void setPlayerPosition(int x, int y){
@@ -113,6 +116,9 @@ public class level {
             Color color = null;
             
             boolean no_color = false;
+            
+            color = getRandomColor();
+            
             for(int row = 0; row < 12; row++){
                 String rows = br.readLine();
                 String[] tokens = rows.split(delims);
@@ -123,10 +129,10 @@ public class level {
                             no_color = true;
                             break;
                         case "0":
-                            color = Color.BROWN;
+                            color = color;
                         break;
-                        case "1":
-                            color = Color.GREEN;
+                        default:
+                            color = color;
                         break;
                     }
                      
@@ -287,6 +293,9 @@ public class level {
         
     }
     
+    public Color getRandomColor() {
+        return this.entityColors[new Random().nextInt(this.entityColors.length)];
+    }
     
     public Node createEntity(int x, int y, int w, int h, Color color){
         Rectangle entity = new Rectangle(w,h);
