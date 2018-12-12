@@ -46,6 +46,7 @@ public class level {
     public ArrayList<Node> platforms = new ArrayList<Node>();
     public ArrayList<Item> items = new ArrayList<Item>();
     public ArrayList<Exit> exits = new ArrayList<Exit>();
+    public ArrayList<Entity> entitys = new ArrayList<Entity>();
     
     public Pane appRoot = new Pane();
     public Pane gameRoot = new Pane();
@@ -65,8 +66,13 @@ public class level {
     public int playerStartXPosition = 0;
     public int playerStartYPosition = 0;
     
+    public Rectangle debugRectangle;
+    public Label debugRectangleXLabel;
+    public Label debugRectangleYLabel;
+    
     public Label coins;
     public Label lifes;
+    public boolean debug = false;
     
     public Color[] entityColors = {Color.ORANGE, Color.BROWN, Color.RED, Color.PURPLE, Color.GOLD};
     
@@ -74,35 +80,45 @@ public class level {
         this.levelFile = levelFile;
     }
     
+    public void setDebug(boolean value){
+        this.debug = debug;
+    }
+    
     public void init(Scene scene){
         scene.setOnKeyPressed(event -> keys.put(event.getCode(), true));
         scene.setOnKeyReleased(event -> keys.put(event.getCode(), false));
     }
     
-    public void addText(String text, int x, int y){
+    public void setDebugRectangle(double x, double y){
         
-        Label label = new Label(text);
-        label.setTranslateX(x);
-        label.setTranslateY(y);
-        label.setTextFill(Color.WHITE);
+        int x_cord = ((int)x / 60) * 60;
+        int y_cord = ((int)y / 60) * 60;
         
-        gameRoot.getChildren().addAll(label);
-    }
-    
-    public void setPlayerPosition(int x, int y){
-        this.playerStartXPosition = x;
-        this.playerStartYPosition = y;
-    }
-    
-    public void addCoinToText(int coins){
-        this.coins.setText("Coins collected: "+coins+" / 27");
-    }
-    
-    public void setLifes(int lifes){
-        this.lifes.setText("Lifes: "+lifes+" / 10");
+        debugRectangleXLabel.setText("Current Rectangle X: " + x_cord);
+        debugRectangleYLabel.setText("Current Rectangle Y: " + y_cord);
+        
+        debugRectangle.setTranslateX(x_cord);
+        debugRectangle.setTranslateY(y_cord);
     }
     
     public Pane scene(){
+        
+        debugRectangleXLabel = new Label();
+        
+        debugRectangleXLabel.setTranslateY(100);
+        debugRectangleXLabel.setTextFill(Color.WHITE);
+        
+        debugRectangleYLabel = new Label();
+        
+        debugRectangleYLabel.setTranslateY(120);
+        debugRectangleYLabel.setTextFill(Color.WHITE);
+        
+        debugRectangle = new Rectangle(60,60);
+        debugRectangle.setTranslateX(100);
+        debugRectangle.setTranslateY(100);
+        debugRectangle.setOpacity(0.4);
+        debugRectangle.setFill(Color.WHITE);
+        gameRoot.getChildren().addAll(debugRectangle);
         
         String csvFile = "Resources/levels/"+ this.levelFile +".csv";
         BufferedReader br = null;
@@ -200,9 +216,38 @@ public class level {
         });
         
         appRoot.getChildren().addAll(bg, gameRoot, uiRoot, coins, lifes, LabelXPosition, LabelYPosition);
+        appRoot.getChildren().addAll(debugRectangleXLabel, debugRectangleYLabel);
         
         return appRoot;
         
+    }
+    
+    public void addText(String text, int x, int y){
+        
+        Label label = new Label(text);
+        label.setTranslateX(x);
+        label.setTranslateY(y);
+        label.setTextFill(Color.WHITE);
+        
+        gameRoot.getChildren().addAll(label);
+    }
+    
+    public void setPlayerPosition(int x, int y){
+        this.playerStartXPosition = x;
+        this.playerStartYPosition = y;
+    }
+    
+    public void addCoinToText(int coins){
+        this.coins.setText("Coins collected:  " + coins);
+    }
+    
+    public void setLifes(int lifes){
+        this.lifes.setText("Lifes: " + lifes + " / 10");
+    }
+    
+    public void addEntity(Entity entity){
+        entitys.add(entity);
+        gameRoot.getChildren().add(entity.getEntity());
     }
     
     public void addItem(Item name){
@@ -266,6 +311,7 @@ public class level {
         }
         
     }
+    
     
     public void movePlayerY(int value){
         
