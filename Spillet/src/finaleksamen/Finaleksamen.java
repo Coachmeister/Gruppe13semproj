@@ -88,16 +88,17 @@ public class Finaleksamen extends Application {
         _level1.addItem(new Item("Test", 300, 500));
         _level1.addItem(new Item("Test", 350, 500));
         
-        level _level2 = new level("level3");
+        level _level2 = new level("level4");
         _level2.setPlayerPosition(0, 0);
         _level2.addItem(new Item("Test", 450, 500));
+        
+        _level2.addEntity(new Entity(100, 100, 100));
         
         level1 = new Scene(_level1.scene());
         level2 = new Scene(_level2.scene());
         
         _level1.init(level1);
         _level1.setExit(new Exit(_level2, level2, 100, 550));
-        _level1.addText("hejsa med dig!", 100, 100);
         
         _level2.init(level2);
         _level2.setExit(new Exit(_level1, level1, 200, 550));
@@ -149,6 +150,9 @@ public class Finaleksamen extends Application {
         checkCoinCollision();
         checkFall();
         checkRoomHover();
+        checkEntity();
+        
+        currentScene.setDebugRectangle(currentScene.playerXPosition, currentScene.playerYPosition);
         
         currentScene.movePlayerY((int)currentScene.playerVelocity.getY());
         
@@ -214,6 +218,7 @@ public class Finaleksamen extends Application {
             currentScene.player.setTranslateY(currentScene.playerStartXPosition);
             this.lifes -= 1;
             currentScene.setLifes(this.lifes);
+            
             if(this.lifes == 0){
                                 
                 DeadScene deadScene = new DeadScene();
@@ -222,6 +227,14 @@ public class Finaleksamen extends Application {
                 
             }
             System.out.println(this.lifes);
+        }
+    }
+    
+    public void checkEntity(){
+        for(int i = 0; i < currentScene.entitys.size(); i++){
+                
+            currentScene.entitys.get(i).changeColor(currentScene.playerXPosition);
+
         }
     }
     
