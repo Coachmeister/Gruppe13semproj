@@ -88,11 +88,11 @@ public class Finaleksamen extends Application {
         _level1.addItem(new Item("Test", 300, 500));
         _level1.addItem(new Item("Test", 350, 500));
         
-        level _level2 = new level("level4");
+        level _level2 = new level("level6");
+        //_level2.setDebug(true);
         _level2.setPlayerPosition(0, 0);
         _level2.addItem(new Item("Test", 450, 500));
-        
-        _level2.addEntity(new Entity(100, 100, 100));
+       
         
         level1 = new Scene(_level1.scene());
         level2 = new Scene(_level2.scene());
@@ -101,7 +101,8 @@ public class Finaleksamen extends Application {
         _level1.setExit(new Exit(_level2, level2, 100, 550));
         
         _level2.init(level2);
-        _level2.setExit(new Exit(_level1, level1, 200, 550));
+        _level2.addEntity(new Entity(1200, 540, 1020, 480));
+        _level2.addEntity(new Entity(1440, 540, 1200, 480));
         
         
         location.setScene(start);
@@ -120,6 +121,9 @@ public class Finaleksamen extends Application {
         
     }
     
+    /*
+    Functions for keyboard input
+    */
     public void update(){
         
         if(currentScene.isPressed(KeyCode.W) && currentScene.player.getTranslateY() >= 5){
@@ -158,6 +162,9 @@ public class Finaleksamen extends Application {
         
     }
     
+    /*
+    If user is within a doors x and y's coordinates
+    */
     public void checkRoomHover(){
         for(int i = 0; i < currentScene.exits.size(); i++){
                 
@@ -173,7 +180,9 @@ public class Finaleksamen extends Application {
 
         }
     }
-    
+    /*
+    Function for entering a room
+    */
     public void goRoom(){
         for(int i = 0; i < currentScene.exits.size(); i++){
                 
@@ -191,6 +200,9 @@ public class Finaleksamen extends Application {
         }
     }
     
+    /*
+    Checks if user hits a coin
+    */
     public void checkCoinCollision(){
         for(int i = 0; i < currentScene.items.size(); i++){
                 
@@ -212,10 +224,17 @@ public class Finaleksamen extends Application {
         }
     }
     
+    /*
+    If user falls out of the map reset, and take one life
+    If no lifes left, then go to dead scene
+    */
     public void checkFall(){
         if(currentScene.playerYPosition > 1000){
             currentScene.player.setTranslateX(currentScene.playerStartXPosition);
             currentScene.player.setTranslateY(currentScene.playerStartXPosition);
+            
+            currentScene.gameRoot.setLayoutX(-(currentScene.playerStartXPosition));
+            
             this.lifes -= 1;
             currentScene.setLifes(this.lifes);
             
@@ -230,10 +249,13 @@ public class Finaleksamen extends Application {
         }
     }
     
+    /*
+    Checks if user hits and X and Y coordinate wich triggers a new block to appear
+    */
     public void checkEntity(){
         for(int i = 0; i < currentScene.entitys.size(); i++){
                 
-            currentScene.entitys.get(i).changeColor(currentScene.playerXPosition);
+            currentScene.entitys.get(i).changeColor(currentScene.playerXPosition, currentScene.playerYPosition);
 
         }
     }

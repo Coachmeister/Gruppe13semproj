@@ -81,7 +81,7 @@ public class level {
     }
     
     public void setDebug(boolean value){
-        this.debug = debug;
+        this.debug = value;
     }
     
     public void init(Scene scene){
@@ -90,35 +90,19 @@ public class level {
     }
     
     public void setDebugRectangle(double x, double y){
-        
-        int x_cord = ((int)x / 60) * 60;
-        int y_cord = ((int)y / 60) * 60;
-        
-        debugRectangleXLabel.setText("Current Rectangle X: " + x_cord);
-        debugRectangleYLabel.setText("Current Rectangle Y: " + y_cord);
-        
-        debugRectangle.setTranslateX(x_cord);
-        debugRectangle.setTranslateY(y_cord);
+        if(debug == true){
+            int x_cord = ((int)x / 60) * 60;
+            int y_cord = ((int)y / 60) * 60;
+
+            debugRectangleXLabel.setText("Current Rectangle X: " + x_cord);
+            debugRectangleYLabel.setText("Current Rectangle Y: " + y_cord);
+
+            debugRectangle.setTranslateX(x_cord);
+            debugRectangle.setTranslateY(y_cord);
+        }
     }
     
     public Pane scene(){
-        
-        debugRectangleXLabel = new Label();
-        
-        debugRectangleXLabel.setTranslateY(100);
-        debugRectangleXLabel.setTextFill(Color.WHITE);
-        
-        debugRectangleYLabel = new Label();
-        
-        debugRectangleYLabel.setTranslateY(120);
-        debugRectangleYLabel.setTextFill(Color.WHITE);
-        
-        debugRectangle = new Rectangle(60,60);
-        debugRectangle.setTranslateX(100);
-        debugRectangle.setTranslateY(100);
-        debugRectangle.setOpacity(0.4);
-        debugRectangle.setFill(Color.WHITE);
-        gameRoot.getChildren().addAll(debugRectangle);
         
         String csvFile = "Resources/levels/"+ this.levelFile +".csv";
         BufferedReader br = null;
@@ -145,10 +129,10 @@ public class level {
                             no_color = true;
                             break;
                         case "0":
-                            color = color;
+                            color = Color.BROWN;
                         break;
                         default:
-                            color = color;
+                            color = Color.BROWN;
                         break;
                     }
                      
@@ -215,8 +199,27 @@ public class level {
            LabelYPosition.setText("Y: "+offset);
         });
         
-        appRoot.getChildren().addAll(bg, gameRoot, uiRoot, coins, lifes, LabelXPosition, LabelYPosition);
-        appRoot.getChildren().addAll(debugRectangleXLabel, debugRectangleYLabel);
+        appRoot.getChildren().addAll(bg, gameRoot, uiRoot, coins, lifes);
+        
+        if(debug == true){
+            debugRectangleXLabel = new Label();
+
+            debugRectangleXLabel.setTranslateY(100);
+            debugRectangleXLabel.setTextFill(Color.WHITE);
+
+            debugRectangleYLabel = new Label();
+
+            debugRectangleYLabel.setTranslateY(120);
+            debugRectangleYLabel.setTextFill(Color.WHITE);
+
+            debugRectangle = new Rectangle(60,60);
+            debugRectangle.setTranslateX(100);
+            debugRectangle.setTranslateY(100);
+            debugRectangle.setOpacity(0.4);
+            debugRectangle.setFill(Color.WHITE);
+            gameRoot.getChildren().addAll(debugRectangle);
+            appRoot.getChildren().addAll(debugRectangleXLabel, debugRectangleYLabel, LabelXPosition, LabelYPosition);
+        }
         
         return appRoot;
         
