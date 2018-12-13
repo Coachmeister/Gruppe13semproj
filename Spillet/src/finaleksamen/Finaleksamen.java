@@ -64,7 +64,7 @@ public class Finaleksamen extends Application {
         Media sound = new Media(new File(musicFile).toURI().toString());
         this.coinSound = new MediaPlayer(sound); // Load sound
         
-        Label label1= new Label("Welcome to Dont Player This Game");
+        Label label1= new Label("Welcome to Dont Play This Game");
         
         Button button1= new Button("Start new game");
         button1.setOnAction(e -> primaryStage.setScene(level1)); 
