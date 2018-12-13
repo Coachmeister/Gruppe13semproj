@@ -100,19 +100,19 @@ public class Finaleksamen extends Application {
         
         level _level3 = new level("3_jonas_1");
         _level3.setPlayerPosition(0, 0);
-        _level3.setDebug(true);
+        _level3.setDebug(false);
         _level3.addItem(new Item(240, 420));
         _level3.addItem(new Item(420, 300));
         
         level _level4 = new level("4_jonas_2");
         _level4.setPlayerPosition(0, 0);
-        _level4.setDebug(true);
+        _level4.setDebug(false);
         _level4.addItem(new Item(420, 480));
         _level4.addItem(new Item(1260, 240));
         
         level _level5 = new level("5_marcus_1");
         _level5.setPlayerPosition(0, 0);
-        _level5.setDebug(true);
+        _level5.setDebug(false);
         _level5.addItem(new Item(720, 120));
         _level5.addItem(new Item(1260, 300));
         
@@ -132,7 +132,7 @@ public class Finaleksamen extends Application {
         
         level _level7 = new level("7_frederik_3_logic");
         _level7.setPlayerPosition(0, 0);
-        _level7.setDebug(true);
+        _level7.setDebug(false);
         _level7.addItem(new Item(1560, 480));
         
         
@@ -172,10 +172,13 @@ public class Finaleksamen extends Application {
         
         _level4.setExit(new Exit(_level3, level3, 0, 360));
         _level4.setExit(new Exit(_level5, level5, 1740, 420));
+        
         _level5.setExit(new Exit(_level4, level4, 0, 540));
         _level5.setExit(new Exit(_level6, level6, 1740, 240));
+        
         _level6.setExit(new Exit(_level5, level5, 0, 360));
         _level6.setExit(new Exit(_level7, level7, 3360, 480));
+        
         _level7.setExit(new Exit(_level6, level6, 0, 480));
         _level7.setExit(new Exit(1680,480));
         
@@ -276,6 +279,7 @@ public class Finaleksamen extends Application {
             int x = currentScene.exits.get(i).getX();
             int y = currentScene.exits.get(i).getY();
             
+            
             // Checks if exit exists on the current player coordinates
             if(currentScene.playerXPosition >= x-60 && currentScene.playerXPosition <= x + 60 && 
                     currentScene.playerYPosition >= y-80 && currentScene.playerYPosition <= y + 80){
@@ -285,7 +289,7 @@ public class Finaleksamen extends Application {
                 if(is_finish == true){
                     location.setScene(finish);
                 }else{
-
+                    
                     // Sets the new virables
                     location.setScene(currentScene.exits.get(i).getScene());
                     currentScene = currentScene.exits.get(i).getLevel();
