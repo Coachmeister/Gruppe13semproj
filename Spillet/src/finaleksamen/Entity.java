@@ -38,10 +38,19 @@ public class Entity {
         
     }
     
+    /**
+     * @return: Rectangle
+     * Description: Returns the rectangle element
+     */
     public Rectangle getEntity(){
         return this.entity;
     }
     
+    /**
+     * @param: x
+     * @param: y
+     * Description: changes the color of an entity if the player hits inside positionX and positionY
+     */
     public void changeColor(int x, int y){
         if(visible == false){
             if(x >= positionX && x <= positionX + 60 &&  y >= positionY-60 && y <= positionY + 60){
@@ -50,12 +59,21 @@ public class Entity {
         }
     }
     
+    /**
+     * @return: int
+     * Description: Returns the x integer
+     */
     public int getX(){
         return x;
     }
     
+    /**
+     * @return: int
+     * Description: Returns the y integer
+     */
     public int getY(){
         return y;
     }
+    
     
 }

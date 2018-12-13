@@ -56,7 +56,7 @@ public class level {
     public Point2D playerVelocity = new Point2D(0, 0);
     public boolean canJump = true;
     
-    public int levelWidth;
+    public int levelWidth = 30; // Standard with 30 
     
     public String levelFile;
     
@@ -74,23 +74,40 @@ public class level {
     public Label lifes;
     public boolean debug = false;
     
-    public Color[] entityColors = {Color.ORANGE, Color.BROWN, Color.RED, Color.PURPLE, Color.GOLD};
     
+    
+    /**
+     * @param levelFile name of the level file
+     */
     level(String levelFile){
         this.levelFile = levelFile;
     }
     
+    /**
+     * @param value sets the debug value
+     */
     public void setDebug(boolean value){
         this.debug = value;
     }
     
+    /**
+     * @param scene
+     * Description: Method for listing to key press and key release.
+     */
     public void init(Scene scene){
         scene.setOnKeyPressed(event -> keys.put(event.getCode(), true));
         scene.setOnKeyReleased(event -> keys.put(event.getCode(), false));
     }
     
+    /**
+     * @param x
+     * @param y
+     * Description: When in debug mode, show what rectangle the current player is located at
+     */
     public void setDebugRectangle(double x, double y){
         if(debug == true){
+            
+            // Calculate closest number that adds up to 60
             int x_cord = ((int)x / 60) * 60;
             int y_cord = ((int)y / 60) * 60;
 
@@ -102,40 +119,44 @@ public class level {
         }
     }
     
+    /**
+     * Description: Sets up everyting for level map and player
+     */
     public Pane scene(){
         
-        String csvFile = "Resources/levels/"+ this.levelFile +".csv";
+        
+        String csvFile = "Resources/levels/"+ this.levelFile +".csv"; // fetch level file
         BufferedReader br = null;
         
         try {
 
-            br = new BufferedReader(new FileReader(csvFile));
+            br = new BufferedReader(new FileReader(csvFile)); // Load file
             
-            String delims = ",";
-            levelWidth = 30 * 60;
+            String delims = ","; // Split up string by every comma and make an array
             Color color = null;
             
             boolean no_color = false;
             
-            color = getRandomColor();
             
+            // Loop threw every line in file
             for(int row = 0; row < 12; row++){
-                String rows = br.readLine();
-                String[] tokens = rows.split(delims);
-                for(int col = 0; col < 30; col++){            
-                    no_color = false;
+                String rows = br.readLine(); // read line
+                String[] tokens = rows.split(delims); // Split string up in array by every comma
+                for(int col = 0; col < levelWidth; col++){ // Loop threw the array         
+                    no_color = false; // if no color
                     switch(tokens[col]){
                         case "-1":
-                            no_color = true;
+                            no_color = true; // in case the token returns -1, there is no block
                             break;
-                        case "0":
-                            color = Color.BROWN;
+                        case "0": 
+                            color = Color.BROWN; // Color the rectangle 0 brown
                         break;
                         default:
-                            color = Color.BROWN;
+                            color = Color.BROWN; // Every other number will be brown too
                         break;
                     }
-                     
+                    
+                    // if there IS a color add it to platform array
                     if(no_color == false){
                         Node platform = createEntity(col*60, row*60, 60, 60, color);
                         platforms.add(platform);
@@ -143,7 +164,7 @@ public class level {
                 }
             }
             
-        } catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e) { // Helps you to know, if the file you have entered dosent exists
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
@@ -157,50 +178,59 @@ public class level {
             }
         }
         
+        levelWidth = levelWidth * 60; // The width of the map
         
         Rectangle bg = new Rectangle(1280, 720);
         
-        player = createEntity(playerStartXPosition, playerStartYPosition, 40, 40, Color.BLUE);
+        player = createEntity(playerStartXPosition, playerStartYPosition, 40, 40, Color.BLUE); // Draw the player
         
-        coins = new Label("Coins collected: 0 / 27");
+        // Sets the coin label
+        coins = new Label("Coins collected: 0");
         coins.setTranslateY(10);
         coins.setTextFill(Color.YELLOW);
         
+        // Sets the life label
         lifes = new Label("Lifes: 10 / 10");
         lifes.setTranslateX(150);
         lifes.setTranslateY(10);
         lifes.setTextFill(Color.RED);
         
+        // Sets the label for showing player location on the X-axes
         Label LabelXPosition = new Label("X: 0");
         LabelXPosition.setTranslateY(50);
         LabelXPosition.setTextFill(Color.WHITE);
         
+        // Listing to the player movement
         player.translateXProperty().addListener((obs, old, newValue) -> {
            int offset = newValue.intValue();
            
            playerXPosition = offset;
-           
+           // Makes sure that the camera follows player
            if(offset > 640 && offset < levelWidth - 640){
                gameRoot.setLayoutX(-(offset - 640));
            }
-            LabelXPosition.setText("X: "+offset);
+           LabelXPosition.setText("X: "+offset);
             
         });
         
+        // Sets the label for showing player location on the X-axes
         Label LabelYPosition = new Label("Y: 0");
         LabelYPosition.setTranslateY(70);
         LabelYPosition.setTextFill(Color.WHITE);
         
+        // Listens to the players movement on the Y-Axes
         player.translateYProperty().addListener((obs, old, newValue) -> {
            int offset = newValue.intValue();
            
            playerYPosition = offset;
-           
+           // Write the the label the y position
            LabelYPosition.setText("Y: "+offset);
         });
         
+        // Sets all elements to the appRoot pane
         appRoot.getChildren().addAll(bg, gameRoot, uiRoot, coins, lifes);
         
+        // Only if level is in debug mode
         if(debug == true){
             debugRectangleXLabel = new Label();
 
@@ -218,6 +248,9 @@ public class level {
             debugRectangle.setOpacity(0.4);
             debugRectangle.setFill(Color.WHITE);
             gameRoot.getChildren().addAll(debugRectangle);
+            
+            // Adds rectangle that shows what rectangle the player is at, and the labels for Y and X coords
+            
             appRoot.getChildren().addAll(debugRectangleXLabel, debugRectangleYLabel, LabelXPosition, LabelYPosition);
         }
         
@@ -225,6 +258,12 @@ public class level {
         
     }
     
+    /**
+     * @param text
+     * @param x
+     * @param y
+     * Description: Adds a label to the current level
+     */
     public void addText(String text, int x, int y){
         
         Label label = new Label(text);
@@ -235,55 +274,75 @@ public class level {
         gameRoot.getChildren().addAll(label);
     }
     
+    /**
+     * @param x
+     * @param y
+     * Description: Sets the player position on level load
+     */
     public void setPlayerPosition(int x, int y){
         this.playerStartXPosition = x;
         this.playerStartYPosition = y;
     }
     
+    public void addFinish(){
+        
+    }
+    
+    /**
+     * @param coins
+     * Description: adds one more coin to the label
+     */
     public void addCoinToText(int coins){
         this.coins.setText("Coins collected:  " + coins);
     }
     
+    /**
+     * @param lifes
+     * Description: remove one life from life label
+     */
     public void setLifes(int lifes){
         this.lifes.setText("Lifes: " + lifes + " / 10");
     }
     
+    /**
+     * @param entity
+     * Description: Add a rectangle to the level
+     */
     public void addEntity(Entity entity){
         entitys.add(entity);
         gameRoot.getChildren().add(entity.getEntity());
     }
     
-    public void addItem(Item name){
-        items.add(name);
-        name.drawEntity(gameRoot);
+    /**
+     * @param name
+     * Description: adds one coin to player inventory
+     */
+    public void addItem(Item coin){
+        items.add(coin);
+        coin.drawEntity(gameRoot);
     }
     
-    public void removeItem(Item name){
-        items.add(name);
+    /**
+     * @param width
+     * Description: if the current level is more than 30 rows, set this method
+     */
+    public void setLevelWidth(int width){
+        levelWidth = width;
     }
     
-    public boolean getItem(int x, int y){
-        for(int i = 0; i < items.size(); i++){
-            System.out.println(items.get(i).getName());
-        }
-        return false;
-    }
-    
-    public void getItems(){
-        for(int i = 0; i < items.size(); i++){
-            System.out.println(items.get(i).getName());
-        }
-    }
-    
+    /**
+     * @param exit
+     * Description: Creates a exit to another level, and draws a white rectangle to show player where to press E to enter
+     */
     public void setExit(Exit exit){
   
         exits.add(exit);
         
         Rectangle entity = new Rectangle(60,80);
         entity.setTranslateX(exit.x);
-        entity.setTranslateY(exit.y);
+        entity.setTranslateY(exit.y-20);
         entity.setArcHeight(40);
-        entity.setFill(Color.WHITE);
+        entity.setFill(exit.color);
         entity.toBack();
         
         gameRoot.getChildren().add(exit.getLabel());
@@ -291,6 +350,9 @@ public class level {
         
     }
     
+    /**
+     * Description: Move the player on the X-axes and check for collision
+     */
     public void movePlayerX(int value){
 
         boolean movingRight = value > 0;
@@ -315,7 +377,10 @@ public class level {
         
     }
     
-    
+    /**
+     * @param
+     * description: Move the player on the Y-axes and check for collision
+     */
     public void movePlayerY(int value){
         
         boolean movingDown = value > 0;
@@ -342,10 +407,15 @@ public class level {
         
     }
     
-    public Color getRandomColor() {
-        return this.entityColors[new Random().nextInt(this.entityColors.length)];
-    }
-    
+    /**
+     * @param x
+     * @param y
+     * @param w
+     * @param h
+     * @param color
+     * @return: Rectangle
+     * Description: Draw the rectangle for the player
+     */
     public Node createEntity(int x, int y, int w, int h, Color color){
         Rectangle entity = new Rectangle(w,h);
         entity.setTranslateX(x);
@@ -358,6 +428,15 @@ public class level {
         
     }
     
+    /**
+     * @param x
+     * @param y
+     * @param w
+     * @param h
+     * @param color
+     * @return: Rectangle
+     * Description: Draw the rectangle for the coin and make it have a radius 50%
+     */
     public Node createCoin(int x, int y){
         Rectangle entity = new Rectangle(20,20);
         entity.setTranslateX(x);
@@ -371,6 +450,9 @@ public class level {
         
     }
     
+    /**
+     * Method for make the player jump
+     */
     public void jumpPlayer(){
         if(canJump){
             playerVelocity = playerVelocity.add(0, -30);
@@ -378,6 +460,15 @@ public class level {
         }
     }
     
+    /**
+     * @param x
+     * @param y
+     * @param w
+     * @param h
+     * @param color
+     * @return: boolean
+     * Description: if an key is pressed or not
+     */
     public boolean isPressed(KeyCode key){
         return keys.getOrDefault(key, false);
     }
