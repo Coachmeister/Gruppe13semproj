@@ -21,10 +21,11 @@ public class Entity {
     private int positionY;
     private boolean visible = false;
     
-    public Entity(int x, int y, int positionX){
+    public Entity(int x, int y, int positionX, int positionY){
         this.x = x;
         this.y = y;
         this.positionX = positionX;
+        this.positionY = positionY;
         
         
         entity = new Rectangle(60,60);
@@ -37,24 +38,42 @@ public class Entity {
         
     }
     
+    /**
+     * @return: Rectangle
+     * Description: Returns the rectangle element
+     */
     public Rectangle getEntity(){
         return this.entity;
     }
     
-    public void changeColor(int x){
+    /**
+     * @param: x
+     * @param: y
+     * Description: changes the color of an entity if the player hits inside positionX and positionY
+     */
+    public void changeColor(int x, int y){
         if(visible == false){
-            if(x == positionX){
-                entity.setFill(Color.RED);
+            if(x >= positionX && x <= positionX + 60 &&  y >= positionY-60 && y <= positionY + 60){
+                entity.setFill(Color.BROWN);
             }
         }
     }
     
+    /**
+     * @return: int
+     * Description: Returns the x integer
+     */
     public int getX(){
         return x;
     }
     
+    /**
+     * @return: int
+     * Description: Returns the y integer
+     */
     public int getY(){
         return y;
     }
+    
     
 }
