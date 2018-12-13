@@ -156,7 +156,6 @@ public class Finaleksamen extends Application {
         
         level7 = new Scene(_level7.scene());
         _level7.init(level7);
-        _level7.setDebug(true);
         _level7.addEntity(new Entity(960, 540, 780, 480));
         _level7.addEntity(new Entity(1140, 540, 960, 480));
         _level7.addEntity(new Entity(1380, 540, 1140, 480));
